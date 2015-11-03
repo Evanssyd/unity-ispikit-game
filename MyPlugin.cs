@@ -79,32 +79,29 @@ public class MyPlugin : MonoBehaviour {
 		setNewWordsCallback ("GameObject", "newWordsCallback");
 		setNewAudioCallback ("GameObject", "newAudioCallback");
 
-
-	}
-	public void onRecord(object source, ElapsedEventArgs e) {
-
-		// recording setup
-		string recordingphrase = "I am learning English,I am going to school today,one two three four";
-		startRecording (recordingphrase);
-	
-		//parsing of sentences
-		char[] delimiterChars = {','};
-		string[] words = recordingphrase.Split (delimiterChars);
-		foreach (string s in words) {
-			sentences.Add (s);
-		
-			//indexing of sentence word count
-			int count = s.Count (c => c == ' ');
-			sentenceindex.Add (count);
-		}
-		Debug.Log ("Starting recording");
-		//end of recording
-	
-	
-		timer = new System.Timers.Timer (3000);
-		timer.Elapsed += onRecordingDone;
-		timer.AutoReset = false;
-		timer.Enabled = true;
+				//recording snipet
+				string recordingphrase = "I am learning English,I am going to school today,one two three four";
+				startRecording (recordingphrase);
+				
+				//parsing of sentences
+				char[] delimiterChars = {','};
+				string[] words = recordingphrase.Split (delimiterChars);
+				foreach (string s in words) {
+					sentences.Add (s);
+					
+					//indexing of sentence word count
+					int count = s.Count (c => c == ' ');
+					sentenceindex.Add (count);
+				}
+				Debug.Log ("Starting recording");
+				//end of recording
+				
+				
+				timer = new System.Timers.Timer (3000);
+				timer.Elapsed += onRecordingDone;
+				timer.AutoReset = false;
+				timer.Enabled = true;
+				
 	}
 
 	private static void onRecordingDone(object source, ElapsedEventArgs e) {
@@ -115,8 +112,6 @@ public class MyPlugin : MonoBehaviour {
 	public void onRestarting(object source, ElapsedEventArgs e) {
 		Debug.Log ("Starting recording");
 		startRecording ("I am learning English,I am going to school today,one two three four");
-
-
 
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
@@ -174,7 +169,7 @@ public class MyPlugin : MonoBehaviour {
 			recognizedSentenceindex = Int32.Parse(list[2]); 
 				
 				//mispronounced word
-				for (int i=5; i<countofVariables+ 1; i+=3) {
+				for (int i=5; i<countofVariables+1; i+=3) {
 					int mispronouncedwordsdata = Int32.Parse(list [i - 1]);
 						if(mispronouncedwordsdata == 1){
 							mispronouncedwordsindex.Add(Int32.Parse(list [i - 2]));							
@@ -201,8 +196,6 @@ public class MyPlugin : MonoBehaviour {
 		//Set the speed public variable
 		speed = Int32.Parse(list[1]);
 
-		GetComponent<Renderer>().enabled = true;
-
 		//timer reset
 		timer = new System.Timers.Timer (1000);
 		timer.Elapsed += onStartPlayback;
@@ -217,7 +210,7 @@ public class MyPlugin : MonoBehaviour {
 
 	public void completionCallback(string status) {
 		Debug.Log ("Completion");
-		Debug.Log (status +"!!!");
+		Debug.Log (status);
 		complete = Int32.Parse (status);
 	}
 	
@@ -230,62 +223,40 @@ public class MyPlugin : MonoBehaviour {
 		Debug.Log ("New audio");
 		Debug.Log (status);
 
-		//parsing the audio callback
-		char[] delimiterChars = {','};
-		string[] words = status.Split (delimiterChars);
+			//parsing the audio callback
+			char[] delimiterChars = {','};
+			string[] words = status.Split (delimiterChars);
 
-		List<String> audiolist = new List<String> ();
-			foreach (string s in words) {
-				audiolist.Add (s);
-				//global volumne variable
-				volumne = Int32.Parse(audiolist[0]);
+			List<String> audiolist = new List<String> ();
+				foreach (string s in words) {
+					audiolist.Add (s);
+					//global volumne variable
+					volumne = Int32.Parse(audiolist[0]);
 
-			}
+				}
 
 	}
+
 	void OnCollisionEnter (Collision col)
 	{
 		if(col.gameObject.name == "master_knight")
 		{
-			string recordingphrase = "I am learning English,I am going to school today,one two three four";
-			startRecording (recordingphrase);
-			
-			//parsing of sentences
-			char[] delimiterChars = {','};
-			string[] words = recordingphrase.Split (delimiterChars);
-			foreach (string s in words) {
-				sentences.Add (s);
-				
-				//indexing of sentence word count
-				int count = s.Count (c => c == ' ');
-				sentenceindex.Add (count);
-			}
-			Debug.Log ("Starting recording");
-			//end of recording
-			
-			
-			timer = new System.Timers.Timer (3000);
-			timer.Elapsed += onRecordingDone;
-			timer.AutoReset = false;
-			timer.Enabled = true;
+			//lets put the code to show the dialog box with options and record buttons
 		}
 	}
+
+	//lets set the possble recording answers on collsiom then the results of complete
 	void OnGUI()
 	{
 	if (complete == 100) {
-			GUI.Box (new Rect (Screen.width - 260, 10, 250, 150), "Words possible");
-			GUI.Label (new Rect (Screen.width - 245, 30, 250, 30), sentences [0]);
-			GUI.Label (new Rect (Screen.width - 245, 50, 250, 30), sentences [1]);
-			GUI.Label (new Rect (Screen.width - 245, 70, 250, 30), sentences [2]);
+			GUI.Box (new Rect (Screen.width - 260, 10, 250, 150), "Your results");
+			GUI.Label (new Rect (Screen.width - 245, 30, 250, 30), sentences [recognizedSentenceindex]);
+			GUI.Label (new Rect (Screen.width - 245, 50, 250, 30), " ");
+			GUI.Label (new Rect (Screen.width - 245, 70, 250, 30), " ");
 			GUI.Label (new Rect (Screen.width - 245, 110, 250, 30), score.ToString ());
 			GUI.Label (new Rect (Screen.width - 245, 130, 250, 30), volumne.ToString ()); 
 		} else {
-			GUI.Box (new Rect (Screen.width - 260, 10, 250, 150), "Words possible");
-			GUI.Label (new Rect (Screen.width - 245, 30, 250, 30), "test");
-			GUI.Label (new Rect (Screen.width - 245, 50, 250, 30), "test");
-			GUI.Label (new Rect (Screen.width - 245, 70, 250, 30), "test");
-			GUI.Label (new Rect (Screen.width - 245, 110, 250, 30), "test");
-			GUI.Label (new Rect (Screen.width - 245, 130, 250, 30), "test"); 
+		
 		}
 	}
 
