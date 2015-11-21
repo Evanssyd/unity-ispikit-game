@@ -122,6 +122,11 @@ public class MyPlugin : MonoBehaviour {
 		foreach (string s in words) {
 			list.Add (s);
 		}
+
+
+		//Parsing the recognized sentence(not really working only if two words not rec)
+	
+
 		mispronouncedwordsindex.Clear ();
 		
 		//Number of words 0 index
@@ -130,11 +135,7 @@ public class MyPlugin : MonoBehaviour {
 			wordnumberpostion = (countofVariables - 2);
 			numberofWords = Int32.Parse(list[wordnumberpostion]);
 			
-			//word count of recognized sentence
-			for(int c = 0; c <= sentenceindex[recognizedSentenceindex]; c++){
-				string test = c.ToString();
-				listindex.Add(test);
-			}
+
 		}else{
 			numberofWords = 0;
 		}
@@ -147,6 +148,19 @@ public class MyPlugin : MonoBehaviour {
 			
 			//recognized sentence #
 			recognizedSentenceindex = Int32.Parse(list[2]);
+
+			sentences1.Clear ();
+			char[] delimiterChars1 = {' '};
+			string[] words1 = sentences [recognizedSentenceindex].Split (delimiterChars1);
+			foreach (string s1 in words1) {
+				sentences1.Add (s1);
+			}
+
+			//word count of recognized sentence
+			for(int c = 0; c < sentences1.Count; c++){
+				string test = c.ToString();
+				listindex.Add(test);
+			}
 			
 			//mispronounced word
 			for (int i=5; i<countofVariables+1; i+=3) {
@@ -168,12 +182,15 @@ public class MyPlugin : MonoBehaviour {
 			countofVariables = 3;
 			System.Console.WriteLine ("I didn't hear anything");
 		}
-		
-		
+
+	
+	
+
+		System.Console.WriteLine (list.Count + "!!!");
 		System.Console.WriteLine (notrecognizedwordslist.Count + "???");
 		notrecognizedwordslist.ForEach(Console.WriteLine);
-		mispronouncedwordsindex.ForEach(Console.WriteLine);
-		
+
+
 		
 		
 		//Set the score public Variable
@@ -249,14 +266,7 @@ public class MyPlugin : MonoBehaviour {
 				int count = s.Count (c => c == ' ');
 				sentenceindex.Add (count);
 			}
-			//Parsing the recognized sentence(not really working only if two words not rec)
-			sentences1.Clear ();
-			char[] delimiterChars1 = {' '};
-			string[] words5 = sentences [recognizedSentenceindex].Split (delimiterChars1);
-			foreach (string s1 in words5) {
-				sentences1.Add (s1);
-			}
-			
+
 			
 			
 			
@@ -275,7 +285,7 @@ public class MyPlugin : MonoBehaviour {
 			string recordingphrase1;
 			sentences.Clear ();
 			//recording snipet
-			recordingphrase1 = "this is a demo,we are making a game,it will be huge";
+			recordingphrase1 = "my favorite is math,science is interesting,nothing is better then art";
 			guiswitch = 1;
 			
 			//parsing of sentences
@@ -289,13 +299,7 @@ public class MyPlugin : MonoBehaviour {
 				sentenceindex.Add (count);
 			}
 
-			//Parsing the recognized sentence(not really working only if two words not rec)
-			sentences1.Clear ();
-			char[] delimiterChars1 = {' '};
-			string[] words6 = sentences [recognizedSentenceindex].Split (delimiterChars1);
-			foreach (string s1 in words6) {
-				sentences1.Add (s1);
-			}
+
 			
 			// Play audio delay recoridng
 			timer = new System.Timers.Timer (3000);
@@ -313,7 +317,7 @@ public class MyPlugin : MonoBehaviour {
 			sentences.Clear ();
 			
 			//recording snipet
-			recordingphrase2 = "this is a demo,we are making a game,it will be huge";
+			recordingphrase2 = "I love to eat dumplings,pizza is my favorite,Nothing is better then duck";
 			guiswitch = 1;
 			
 			//parsing of sentences
@@ -326,14 +330,10 @@ public class MyPlugin : MonoBehaviour {
 				int count = s.Count (c => c == ' ');
 				sentenceindex.Add (count);
 			}
-			//Parsing the recognized sentence(not really working only if two words not rec)
-			sentences1.Clear ();
-			char[] delimiterChars1 = {' '};
-			string[] words7 = sentences [recognizedSentenceindex].Split (delimiterChars1);
-			foreach (string s1 in words7) {
-				sentences1.Add (s1);
-			}
-			
+		
+			System.Console.WriteLine(sentenceindex + "!?!?");
+			System.Console.WriteLine(sentenceindex.Count + "?!?!");
+
 			//play audio delay recording
 			
 			timer = new System.Timers.Timer (3000);
@@ -351,7 +351,7 @@ public class MyPlugin : MonoBehaviour {
 			string recordingphrase3;
 			sentences.Clear ();
 			//recording snipet
-			recordingphrase3 = "to talk with my friend,I want to study in America,for a better future";
+			recordingphrase3 = "to talk with my friends,I want to study in America,learning languages is fun";
 			guiswitch = 1;
 			
 			//parsing of sentences
@@ -364,13 +364,7 @@ public class MyPlugin : MonoBehaviour {
 				int count = s.Count (c => c == ' ');
 				sentenceindex.Add (count);
 			}
-			//Parsing the recognized sentence(not really working only if two words not rec)
-			sentences1.Clear ();
-			char[] delimiterChars1 = {' '};
-			string[] words1 = sentences [recognizedSentenceindex].Split (delimiterChars1);
-			foreach (string s1 in words1) {
-				sentences1.Add (s1);
-			}
+
 			
 			//play audio delay recording
 			
@@ -392,7 +386,7 @@ public class MyPlugin : MonoBehaviour {
 	
 	private void recordarcher1(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("this is a demo,we are making a game,it will be huge");
+		startRecording("my favorite is math,science is interesting,nothing is better then art");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
@@ -400,7 +394,7 @@ public class MyPlugin : MonoBehaviour {
 	}
 	private void recordelf1(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("this is a demo,we are making a game,it will be huge");
+		startRecording("I love to eat dumplings,pizza is my favorite,Nothing is better then duck");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
@@ -409,7 +403,7 @@ public class MyPlugin : MonoBehaviour {
 	
 	private void recordorc1(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("talk with my friends,I want to study in America,for a better future");
+		startRecording("to talk with my friends,I want to study in America,learning languages is fun");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
@@ -428,10 +422,10 @@ public class MyPlugin : MonoBehaviour {
 			GUI.skin.box.fontSize = 45;
 			
 			GUI.Box (new Rect (100, 100, Screen.width - 200, 840),"Welcome to Ispikit World, a demonstration of our speech SDK." );
-			GUI.Label (new Rect (150, 250, Screen.width - 200, 840),"Our English SDK is easy to use setup and runs completely offline." );
-			GUI.Label (new Rect (150, 400, Screen.width - 200, 840),"It recognizes your speech and tell you how well you said it.");
-			GUI.Label (new Rect (150, 550, Screen.width - 200, 840),"For thid demo collide with a character and speak one of the optional phrases");
-			GUI.Label (new Rect (150, 750, Screen.width - 200, 840),"We are initializing the system, once this box disappears you are ready to begin!");
+			GUI.Label (new Rect (150, 250, Screen.width - 200, 800),"Our English SDK is easy to use setup and runs completely offline." );
+			GUI.Label (new Rect (150, 400, Screen.width - 200, 800),"It recognizes your speech and tell you how well you said it.");
+			GUI.Label (new Rect (150, 550, Screen.width - 200, 800),"For thid demo collide with a character and speak one of the optional phrases");
+			GUI.Label (new Rect (150, 750, Screen.width - 200, 800),"We are initializing the system, once this box disappears you are ready to begin!");
 		}
 		
 		
