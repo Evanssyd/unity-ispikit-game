@@ -55,8 +55,7 @@ public class MyPlugin : MonoBehaviour {
 	public List<int> notrecognizedwordslist  = new List<int> ();
 	public List<String> sentences = new List<String> ();
 	public List<String> sentences1 = new List<String> ();
-	
-	private	int someInt = 40;
+
 	
 	//private list
 	private List<int> sentenceindex = new List<int> ();
@@ -70,6 +69,7 @@ public class MyPlugin : MonoBehaviour {
 	private int mispronoucedword;
 	public int guiswitch = 0;
 	public int recordinit = 0;
+	private	int someInt = 40;
 	
 	
 	void Start () {
@@ -96,6 +96,8 @@ public class MyPlugin : MonoBehaviour {
 	private void onRecordingDone(object source, ElapsedEventArgs e) {
 		Debug.Log ("Stopping recording");
 		stopRecording ();
+
+		//CHANGE RECORDING UI
 		recordinit = 0;
 		
 	}
@@ -122,9 +124,6 @@ public class MyPlugin : MonoBehaviour {
 		foreach (string s in words) {
 			list.Add (s);
 		}
-
-
-		//Parsing the recognized sentence(not really working only if two words not rec)
 	
 
 		mispronouncedwordsindex.Clear ();
@@ -139,8 +138,7 @@ public class MyPlugin : MonoBehaviour {
 		}else{
 			numberofWords = 0;
 		}
-		
-		//mispronounced
+
 		List<String> recognitionindex = new List<String> ();
 		
 		//If the system recognized anywords
@@ -149,6 +147,7 @@ public class MyPlugin : MonoBehaviour {
 			//recognized sentence #
 			recognizedSentenceindex = Int32.Parse(list[2]);
 
+			//PARSE THE RECOGNIZED SENTENCE
 			sentences1.Clear ();
 			char[] delimiterChars1 = {' '};
 			string[] words1 = sentences [recognizedSentenceindex].Split (delimiterChars1);
@@ -183,16 +182,6 @@ public class MyPlugin : MonoBehaviour {
 			System.Console.WriteLine ("I didn't hear anything");
 		}
 
-	
-	
-
-		System.Console.WriteLine (list.Count + "!!!");
-		System.Console.WriteLine (notrecognizedwordslist.Count + "???");
-		notrecognizedwordslist.ForEach(Console.WriteLine);
-
-
-		
-		
 		//Set the score public Variable
 		score = Int32.Parse(list[0]);
 		
@@ -249,9 +238,10 @@ public class MyPlugin : MonoBehaviour {
 		{
 			recordinit = 2;
 			
-			//set string for re
+			//set string for recording
 			string recordingphrase;
 			sentences.Clear ();
+
 			//recording snipet
 			recordingphrase = "I am learning English,I love to develop apps,on the weekend I play golf";
 			guiswitch = 1;
@@ -267,9 +257,6 @@ public class MyPlugin : MonoBehaviour {
 				sentenceindex.Add (count);
 			}
 
-			
-			
-			
 			//play audio delay recording
 			timer = new System.Timers.Timer (3000);
 			timer.Elapsed += recordknight1;
@@ -281,7 +268,7 @@ public class MyPlugin : MonoBehaviour {
 		if(col.gameObject.name == "magic_archer")
 		{
 			recordinit = 2;
-			
+			//set recording string
 			string recordingphrase1;
 			sentences.Clear ();
 			//recording snipet
@@ -298,8 +285,6 @@ public class MyPlugin : MonoBehaviour {
 				int count = s.Count (c => c == ' ');
 				sentenceindex.Add (count);
 			}
-
-
 			
 			// Play audio delay recoridng
 			timer = new System.Timers.Timer (3000);
@@ -312,7 +297,7 @@ public class MyPlugin : MonoBehaviour {
 		if(col.gameObject.name == "elf")
 		{
 			recordinit = 2;
-			
+			//set recording string
 			string recordingphrase2;
 			sentences.Clear ();
 			
@@ -330,12 +315,8 @@ public class MyPlugin : MonoBehaviour {
 				int count = s.Count (c => c == ' ');
 				sentenceindex.Add (count);
 			}
-		
-			System.Console.WriteLine(sentenceindex + "!?!?");
-			System.Console.WriteLine(sentenceindex.Count + "?!?!");
 
 			//play audio delay recording
-			
 			timer = new System.Timers.Timer (3000);
 			timer.Elapsed += recordelf1;
 			timer.AutoReset = false;
@@ -365,9 +346,7 @@ public class MyPlugin : MonoBehaviour {
 				sentenceindex.Add (count);
 			}
 
-			
 			//play audio delay recording
-			
 			timer = new System.Timers.Timer (3000);
 			timer.Elapsed += recordorc1;
 			timer.AutoReset = false;
@@ -414,25 +393,23 @@ public class MyPlugin : MonoBehaviour {
 	//lets set the possble recording answers on collsiom then the results of complete
 	void OnGUI()
 	{
-		
-		if (initComplete == "0") {
-			
+		//introduction box
+		if (initComplete == "0") {	
 		} else {
 			GUI.skin.label.fontSize = 50;
 			GUI.skin.box.fontSize = 45;
 			
 			GUI.Box (new Rect (100, 100, Screen.width - 200, 840),"Welcome to Ispikit World, a demonstration of our speech SDK." );
-			GUI.Label (new Rect (150, 250, Screen.width - 200, 800),"Our English SDK is easy to use setup and runs completely offline." );
-			GUI.Label (new Rect (150, 400, Screen.width - 200, 800),"It recognizes your speech and tell you how well you said it.");
-			GUI.Label (new Rect (150, 550, Screen.width - 200, 800),"For thid demo collide with a character and speak one of the optional phrases");
-			GUI.Label (new Rect (150, 750, Screen.width - 200, 800),"We are initializing the system, once this box disappears you are ready to begin!");
+			GUI.Label (new Rect (150, 250, Screen.width - 200, 775),"Our English SDK is easy to use setup and runs completely offline." );
+			GUI.Label (new Rect (150, 400, Screen.width - 200, 775),"It recognizes your speech and tell you how well you said it.");
+			GUI.Label (new Rect (150, 550, Screen.width - 200, 775),"For thid demo collide with a character and speak one of the optional phrases");
+			GUI.Label (new Rect (150, 750, Screen.width - 200, 775),"We are initializing the system, once this box disappears you are ready to begin!");
 		}
 		
 		
 		
-		
+		//options box
 		if (guiswitch == 1) {
-			
 			GUI.skin.label.fontSize = someInt;
 			GUI.skin.box.fontSize = someInt;
 			
