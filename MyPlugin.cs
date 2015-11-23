@@ -49,6 +49,7 @@ public class MyPlugin : MonoBehaviour {
 	public int volumne;
 	public string missingwords;
 	public string initComplete;
+	public int knightgrammarswitch = 0;
 	
 	//public lists
 	public List<int> mispronouncedwordsindex  = new List<int> ();
@@ -69,10 +70,10 @@ public class MyPlugin : MonoBehaviour {
 	private int mispronoucedword;
 	public int guiswitch = 0;
 	public int recordinit = 0;
-	private	int someInt = 40;
-	
+
 	
 	void Start () {
+
 	}
 	
 	void Update () {
@@ -105,6 +106,7 @@ public class MyPlugin : MonoBehaviour {
 	public void playbackDoneCallback(string status) {
 		Debug.Log ("Playback Done");
 		Debug.Log (status);
+
 		timer = new System.Timers.Timer (1000);
 		timer.AutoReset = false;
 		timer.Enabled = true;
@@ -174,7 +176,7 @@ public class MyPlugin : MonoBehaviour {
 			List<string> ThirdList =  listindex.Except(recognitionindex).ToList();
 			notrecognizedwordslist = ThirdList.Select(s => Convert.ToInt32(s)).ToList();
 			mispronouncedwordsindex.ForEach(Console.WriteLine);
-			System.Console.WriteLine(mispronouncedwordsindex.Count + "!!!");
+			System.Console.WriteLine(mispronouncedwordsindex.Count);
 			
 		}
 		else{
@@ -187,6 +189,15 @@ public class MyPlugin : MonoBehaviour {
 		
 		//Set the speed public variable
 		speed = Int32.Parse(list[1]);
+
+		//reaction functions
+		if(score > 80 && sentences[recognizedSentenceindex] == "I am learning English"){
+			knightgrammarswitch = 1;
+
+		}else{
+			knightgrammarswitch = 0;
+		}
+
 		
 		//timer reset
 		timer = new System.Timers.Timer (1000);
@@ -233,37 +244,63 @@ public class MyPlugin : MonoBehaviour {
 	
 	void OnCollisionEnter (Collision col)
 	{
-		//Target collison with Master_knight
-		if(col.gameObject.name == "master_knight")
-		{
-			recordinit = 2;
-			
-			//set string for recording
-			string recordingphrase;
-			sentences.Clear ();
 
-			//recording snipet
-			recordingphrase = "I am learning English,I love to develop apps,on the weekend I play golf";
-			guiswitch = 1;
-			
-			//parsing of sentences
-			char[] delimiterChars = {','};
-			string[] words = recordingphrase.Split (delimiterChars);
-			foreach (string s in words)
-			{
-				sentences.Add (s);
-				//indexing of sentence word count
-				int count = s.Count (c => c == ' ');
-				sentenceindex.Add (count);
-			}
+			//Target collison with Master_knight
+			if (col.gameObject.name == "master_knight") {
+				
+				recordinit = 2;
 
-			//play audio delay recording
-			timer = new System.Timers.Timer (3000);
-			timer.Elapsed += recordknight1;
-			timer.AutoReset = false;
-			timer.Enabled = true;
+				if (knightgrammarswitch == 0) {
+				//set string for recording
+				string recordingphrase;
+				sentences.Clear ();
+
+				//recording snipet
+				recordingphrase = "I am learning English,I love to develop apps,on the weekend I play golf";
+				guiswitch = 1;
+			
+				//parsing of sentences
+				char[] delimiterChars = {','};
+				string[] words = recordingphrase.Split (delimiterChars);
+				foreach (string s in words) {
+					sentences.Add (s);
+					//indexing of sentence word count
+					int count = s.Count (c => c == ' ');
+					sentenceindex.Add (count);
+				}
+
+				//play audio delay recording
+				timer = new System.Timers.Timer (3000);
+				timer.Elapsed += recordknight1;
+				timer.AutoReset = false;
+				timer.Enabled = true;
+
+			} else if(knightgrammarswitch == 1) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "how long have you studied,do you think it is hard,can you curse";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordknight2;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				}else{}
 		}
-		
 		//Target collison with magic_archer
 		if(col.gameObject.name == "magic_archer")
 		{
@@ -272,7 +309,7 @@ public class MyPlugin : MonoBehaviour {
 			string recordingphrase1;
 			sentences.Clear ();
 			//recording snipet
-			recordingphrase1 = "my favorite is math,science is interesting,nothing is better then art";
+			recordingphrase1 = "my favorite is math,science is interesting,nothing is better than art";
 			guiswitch = 1;
 			
 			//parsing of sentences
@@ -302,7 +339,7 @@ public class MyPlugin : MonoBehaviour {
 			sentences.Clear ();
 			
 			//recording snipet
-			recordingphrase2 = "I love to eat dumplings,pizza is my favorite,Nothing is better then duck";
+			recordingphrase2 = "I love to eat dumplings,pizza is my favorite,Nothing is better than duck";
 			guiswitch = 1;
 			
 			//parsing of sentences
@@ -362,10 +399,18 @@ public class MyPlugin : MonoBehaviour {
 		timer.AutoReset = false;
 		timer.Enabled = true;
 	}
+	private void recordknight2(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("I can say my name,I learned to count to ten,I love hearing jokes");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
 	
 	private void recordarcher1(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("my favorite is math,science is interesting,nothing is better then art");
+		startRecording("my favorite is math,science is interesting,nothing is better thn art");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
@@ -373,7 +418,7 @@ public class MyPlugin : MonoBehaviour {
 	}
 	private void recordelf1(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("I love to eat dumplings,pizza is my favorite,Nothing is better then duck");
+		startRecording("I love to eat dumplings,pizza is my favorite,Nothing is better than duck");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
@@ -388,75 +433,103 @@ public class MyPlugin : MonoBehaviour {
 		timer.AutoReset = false;
 		timer.Enabled = true;
 	}
-	
-	
+
 	//lets set the possble recording answers on collsiom then the results of complete
 	void OnGUI()
 	{
 		//introduction box
 		if (initComplete == "0") {	
+		
 		} else {
-			GUI.skin.label.fontSize = 50;
-			GUI.skin.box.fontSize = 45;
+			if (Screen.width < 800 && Screen.width > 490) {
+				GUI.skin.label.fontSize = 30;
+				GUI.skin.box.fontSize = 45;
+			} else if (Screen.width > 800) {
+				GUI.skin.label.fontSize = 50;
+				GUI.skin.box.fontSize = 60;
+			}else {
+				GUI.skin.label.fontSize = 18;
+				GUI.skin.box.fontSize = 25;
+			}
 			
-			GUI.Box (new Rect (100, 100, Screen.width - 200, 840),"Welcome to Ispikit World, a demonstration of our speech SDK." );
-			GUI.Label (new Rect (150, 250, Screen.width - 200, 775),"Our English SDK is easy to use setup and runs completely offline." );
-			GUI.Label (new Rect (150, 400, Screen.width - 200, 775),"It recognizes your speech and tell you how well you said it.");
-			GUI.Label (new Rect (150, 550, Screen.width - 200, 775),"For thid demo collide with a character and speak one of the optional phrases");
-			GUI.Label (new Rect (150, 750, Screen.width - 200, 775),"We are initializing the system, once this box disappears you are ready to begin!");
+				GUI.Box (new Rect (5, 10, Screen.width - 10, 640), "");
+			if(Screen.width > 500){
+				GUI.Label (new Rect ((Screen.width / 4), 15, Screen.width - 10,600),"Ispikit English SDK" );
+			}else{
+				GUI.Label (new Rect ((Screen.width / 5), 15, Screen.width - 10,600),"Ispikit English SDK" );
+			}
+				GUI.Label (new Rect (10, 100, Screen.width - 15, 600), "Recognize what a student says than give them feedback  how well they said it. Our SDK is easy to setup and runs completely offline.");
+				GUI.Label (new Rect (10, 200, Screen.width - 10, 600), "For this demo, collide with a character and speak one of the optional phrases.");
+				GUI.Label (new Rect (10, 275, Screen.width - 10, 600), "The system is initializing, once this box disappears you are ready to begin!");
 		}
 		
 		
 		
 		//options box
 		if (guiswitch == 1) {
-			GUI.skin.label.fontSize = someInt;
-			GUI.skin.box.fontSize = someInt;
-			
-			GUI.Box (new Rect (10, 10, 500, 250), "Your options");
-			GUI.Label (new Rect (15, 60, 490, 330), sentences [0]);
-			GUI.Label (new Rect (15, 110, 490, 330), sentences [1]);
-			GUI.Label (new Rect (15, 160, 490,330), sentences [2]);
-			
-			if(recordinit == 0){
-				GUI.Label (new Rect (15, 210, 260, 330),"Not Recording");
-				GUI.Label (new Rect (280, 210, 490, 330),"Volumne: " + volumne.ToString ());
-			}else if(recordinit == 2){
-				GUI.Label (new Rect (15, 210, 260, 330),"Wait");
-				GUI.Label (new Rect (280, 210, 490, 330),"Volumne: " + volumne.ToString ());
+			if (Screen.width > 700){
+				GUI.skin.label.fontSize = 40;
+				GUI.skin.box.fontSize = 40;
 			}else{
-				GUI.Label (new Rect (15, 210, 260, 330),"Speak Now! ");
-				GUI.Label (new Rect (280, 210, 490, 330),"Volumne: " + volumne.ToString ());
+				GUI.skin.label.fontSize = 20;
+				GUI.skin.box.fontSize = 20;
+			}
+			GUI.Box (new Rect (2, 10,  (Screen.width / 2) - 5, 250), "Your options");
+			GUI.Label (new Rect (5, 50, (Screen.width / 2) - 10, 330), sentences [0]);
+			GUI.Label (new Rect (5, 90,  (Screen.width / 2) - 10, 330), sentences [1]);
+			GUI.Label (new Rect (5, 130,  (Screen.width / 2) - 10, 330), sentences [2]);
+				
+			if(recordinit == 0){
+				GUI.Label (new Rect (5, 170,  (Screen.width / 2) - 10, 330),"Not Recording");
+				GUI.Label (new Rect (5, 210, (Screen.width / 2) - 10, 330),"Volume: " + volumne.ToString ());
+			}else if(recordinit == 2){
+				GUI.Label (new Rect (5, 170,  (Screen.width / 2) - 10, 330),"Wait");
+				GUI.Label (new Rect (5, 210, (Screen.width / 2) - 10, 330),"Volume: " + volumne.ToString ());
+			}else{
+				GUI.Label (new Rect (5, 170,  (Screen.width / 2) - 10, 330),"Speak Now! ");
+				GUI.Label (new Rect (5, 210, (Screen.width / 2) - 10, 330),"Volume: " + volumne.ToString ());
 			}
 		} else {
 		}
 		
 		//THE RESULTS BOX
 		if(complete > 1 && complete < 99){
-			GUI.skin.label.fontSize = someInt;
-			GUI.skin.box.fontSize = someInt;
-			
-			GUI.Box (new Rect (Screen.width - 510, 10, 500, 250), "");
-			GUI.Label (new Rect (Screen.width - 505, 90, 490, 330), "Calculating your score...");
+
+			if(Screen.width > 700){
+				GUI.skin.label.fontSize = 40;
+				GUI.skin.box.fontSize = 40;
+			}else{
+				GUI.skin.label.fontSize = 20;
+				GUI.skin.box.fontSize = 20;
+			}
+			GUI.Box (new Rect ((Screen.width / 2) + 5, 10, (Screen.width / 2) + 5, 250), "");
+			GUI.Label (new Rect ((Screen.width / 2) + 10, 100, (Screen.width / 2) + 10, 330), "Calculating your score...");
 		}
 		else if (complete == 100) {
-			GUI.skin.label.fontSize = someInt;
-			GUI.skin.box.fontSize = someInt;
-			
-			GUI.Box (new Rect (Screen.width - 510, 10, 500, 250), "Your results");
-			GUI.Label (new Rect (Screen.width - 505, 50, 490, 330), sentences [recognizedSentenceindex]);
+			if(Screen.width > 700){
+				GUI.skin.label.fontSize = 40;
+				GUI.skin.box.fontSize = 40;
+			}else{
+				GUI.skin.label.fontSize = 20;
+				GUI.skin.box.fontSize = 20;
+			}
+				GUI.Box (new Rect ((Screen.width / 2) + 5, 10, (Screen.width / 2) - 5, 250), "Your results");
+				GUI.Label (new Rect ((Screen.width / 2) + 10, 50, (Screen.width / 2) - 10, 330), sentences [recognizedSentenceindex]);
+
 			if(notrecognizedwordslist.Count > 0){
-				GUI.Label (new Rect (Screen.width - 505, 90, 490, 330), "Missed: " + sentences1[notrecognizedwordslist[0]]);
+				GUI.Label (new Rect ((Screen.width / 2) + 10, 90, (Screen.width / 2) - 10, 330), "Missed: " + sentences1[notrecognizedwordslist[0]]);
 			}else{
-				GUI.Label (new Rect (Screen.width - 505, 90, 490, 330), "Missed: None");
+				GUI.Label (new Rect ((Screen.width / 2) + 10, 90, (Screen.width / 2) - 10, 330), "Missed: None");
 			}
+
 			if(mispronouncedwordsindex.Count > 0){
-				GUI.Label (new Rect (Screen.width - 505, 130, 490, 330), "Mispronounced: " + sentences1[mispronouncedwordsindex[0]]);
+				GUI.Label (new Rect ((Screen.width / 2) + 10, 130, (Screen.width / 2) - 10, 330), "Mispronounced: " + sentences1[mispronouncedwordsindex[0]]);
 			}else{
-				GUI.Label (new Rect (Screen.width - 505, 130, 490, 330), "Mispronounced: None");
+				GUI.Label (new Rect ((Screen.width / 2) + 10, 130, (Screen.width / 2) - 10, 330), "Mispronounced: None");
 			}
-			GUI.Label (new Rect (Screen.width - 505, 170, 490, 330), "Score: " + score.ToString ());
-			GUI.Label (new Rect (Screen.width - 505, 210, 490, 330), "Speed: " + speed.ToString ());
+
+				GUI.Label (new Rect ((Screen.width / 2) + 10, 170, (Screen.width / 2) - 10, 330), "Score: " + score.ToString ());
+				GUI.Label (new Rect ((Screen.width / 2) + 10, 210, (Screen.width / 2) - 10, 330), "Speed: " + speed.ToString ());
 		} else {
 		}
 	}
