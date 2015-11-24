@@ -71,9 +71,9 @@ public class MyPlugin : MonoBehaviour {
 	public int guiswitch = 0;
 	public int recordinit = 0;
 
-	
 	void Start () {
 
+	
 	}
 	
 	void Update () {
@@ -107,6 +107,9 @@ public class MyPlugin : MonoBehaviour {
 		Debug.Log ("Playback Done");
 		Debug.Log (status);
 
+		//turn back on collision for each character
+
+	
 		timer = new System.Timers.Timer (1000);
 		timer.AutoReset = false;
 		timer.Enabled = true;
@@ -244,7 +247,7 @@ public class MyPlugin : MonoBehaviour {
 	
 	void OnCollisionEnter (Collision col)
 	{
-
+		if(recordinit == 0){
 			//Target collison with Master_knight
 			if (col.gameObject.name == "master_knight") {
 				
@@ -268,6 +271,7 @@ public class MyPlugin : MonoBehaviour {
 					int count = s.Count (c => c == ' ');
 					sentenceindex.Add (count);
 				}
+
 
 				//play audio delay recording
 				timer = new System.Timers.Timer (3000);
@@ -293,7 +297,7 @@ public class MyPlugin : MonoBehaviour {
 						int count = s.Count (c => c == ' ');
 						sentenceindex.Add (count);
 					}
-					
+
 					//play audio delay recording
 					timer = new System.Timers.Timer (3000);
 					timer.Elapsed += recordknight2;
@@ -389,7 +393,9 @@ public class MyPlugin : MonoBehaviour {
 			timer.AutoReset = false;
 			timer.Enabled = true;
 		}
-		
+		}else{
+
+		}
 	}
 	private void recordknight1(object source, ElapsedEventArgs e){
 		recordinit = 1;
@@ -398,6 +404,7 @@ public class MyPlugin : MonoBehaviour {
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
 		timer.Enabled = true;
+
 	}
 	private void recordknight2(object source, ElapsedEventArgs e){
 		recordinit = 1;
@@ -459,8 +466,8 @@ public class MyPlugin : MonoBehaviour {
 				GUI.Label (new Rect ((Screen.width / 5), 15, Screen.width - 10,600),"Ispikit English SDK" );
 			}
 				GUI.Label (new Rect (10, 100, Screen.width - 15, 600), "Recognize what a student says than give them feedback  how well they said it. Our SDK is easy to setup and runs completely offline.");
-				GUI.Label (new Rect (10, 200, Screen.width - 10, 600), "For this demo, collide with a character and speak one of the optional phrases.");
-				GUI.Label (new Rect (10, 275, Screen.width - 10, 600), "The system is initializing, once this box disappears you are ready to begin!");
+				GUI.Label (new Rect (10, 300, Screen.width - 10, 600), "For this demo, collide with a character and speak one of the optional phrases.");
+				GUI.Label (new Rect (10, 425, Screen.width - 10, 600), "The system is initializing, once this box disappears you are ready to begin!");
 		}
 		
 		
