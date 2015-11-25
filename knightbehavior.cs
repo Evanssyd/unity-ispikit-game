@@ -12,6 +12,7 @@ public class knightbehavior : MonoBehaviour {
 	//public variabless
 	public Animator anim;
 	public AudioClip learn;
+	public AudioClip learn1;
 	private AudioSource source;
 	private MyPlugin tryit;
 
@@ -32,12 +33,19 @@ public class knightbehavior : MonoBehaviour {
 	
 	void OnCollisionEnter (Collision col)
 	{ 
-		System.Console.WriteLine (tryit.recordinit);
+
 			if (col.gameObject.name == "GameObject") {
 				if (tryit.recordinit == 0) {
-				source.PlayOneShot (learn);
-				anim = GetComponent<Animator> ();
-				StartCoroutine (PlayAnimInterval (5, 1F));
+					if(tryit.knightgrammarswitch == 0){
+						source.PlayOneShot (learn);
+						anim = GetComponent<Animator> ();
+						StartCoroutine (PlayAnimInterval (5, 1F));
+					}else if(tryit.knightgrammarswitch ==1){
+						source.PlayOneShot (learn1);
+						anim = GetComponent<Animator> ();
+						StartCoroutine (PlayAnimInterval (5, 1F));
+					}else{
+					}
 				} else {
 				
 				}
