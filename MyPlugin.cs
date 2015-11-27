@@ -49,8 +49,13 @@ public class MyPlugin : MonoBehaviour {
 	public int volumne;
 	public string missingwords;
 	public string initComplete;
+
+	//grammar switching
 	public int knightgrammarswitch = 0;
-	
+	public int archergrammarswitch = 0;	
+	public int orcgrammarswitch = 0;
+	public int elfgrammarswitch = 0;
+
 	//public lists
 	public List<int> mispronouncedwordsindex  = new List<int> ();
 	public List<int> notrecognizedwordslist  = new List<int> ();
@@ -193,15 +198,51 @@ public class MyPlugin : MonoBehaviour {
 		//Set the speed public variable
 		speed = Int32.Parse(list[1]);
 
-		//reaction functions
-		if(score > 80 && sentences[recognizedSentenceindex] == "I am learning English"){
+		//reaction functions knight
+		if(score > 80 && sentences[recognizedSentenceindex] == "playing sports is fun"){
+			knightgrammarswitch = 3;
+		}else if(score > 80 && sentences[recognizedSentenceindex] == "I love working with technology"){
+			knightgrammarswitch = 2;
+		}else if(score > 80 && sentences[recognizedSentenceindex] == "I am learning English"){
 			knightgrammarswitch = 1;
-
 		}else{
 			knightgrammarswitch = 0;
 		}
 
+		//reaction functions archer
+		if(score > 80 && sentences[recognizedSentenceindex] == "nothing is better then art"){
+			archergrammarswitch = 3;
+		}else if(score > 80 && sentences[recognizedSentenceindex] == "science is interesting"){
+			archergrammarswitch = 2;
+		}else if(score > 80 && sentences[recognizedSentenceindex] == "my favorite is math"){
+			archergrammarswitch = 1;
+		}else{
+			archergrammarswitch = 0;
+		}
 		
+		//reaction functions orc
+		if(score > 80 && sentences[recognizedSentenceindex] == "I want to run and jump"){
+			orcgrammarswitch = 3;
+		}else if(score > 80 && sentences[recognizedSentenceindex] == "We should battle enemies"){
+			orcgrammarswitch = 2;
+		}else if(score > 80 && sentences[recognizedSentenceindex] == "I want to talk to characters"){
+			orcgrammarswitch = 1;
+		}else{
+			orcgrammarswitch = 0;
+		}
+
+
+		//reaction functions elf
+		if(score > 80 && sentences[recognizedSentenceindex] == "Nothing is better than duck"){
+			elfgrammarswitch = 3;
+		}else if(score > 80 && sentences[recognizedSentenceindex] == "pizza is my favorite"){
+			elfgrammarswitch = 2;
+		}else if(score > 80 && sentences[recognizedSentenceindex] == "I love to eat dumplings"){
+			elfgrammarswitch = 1;
+		}else{
+			elfgrammarswitch = 0;
+		}
+
 		//timer reset
 		timer = new System.Timers.Timer (1000);
 		timer.Elapsed += onStartPlayback;
@@ -247,45 +288,45 @@ public class MyPlugin : MonoBehaviour {
 	
 	void OnCollisionEnter (Collision col)
 	{
-		if(recordinit == 0){
+		if (recordinit == 0) {
 			//Target collison with Master_knight
 			if (col.gameObject.name == "master_knight") {
 				
 				recordinit = 2;
 
 				if (knightgrammarswitch == 0) {
-				//set string for recording
-				string recordingphrase;
-				sentences.Clear ();
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
 
-				//recording snipet
-				recordingphrase = "I am learning English,I love to develop apps,on the weekend I play golf";
-				guiswitch = 1;
+					//recording snipet
+					recordingphrase = "I am learning English,I love working with technology,playing sports is fun";
+					guiswitch = 1;
 			
-				//parsing of sentences
-				char[] delimiterChars = {','};
-				string[] words = recordingphrase.Split (delimiterChars);
-				foreach (string s in words) {
-					sentences.Add (s);
-					//indexing of sentence word count
-					int count = s.Count (c => c == ' ');
-					sentenceindex.Add (count);
-				}
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
 
 
-				//play audio delay recording
-				timer = new System.Timers.Timer (3000);
-				timer.Elapsed += recordknight1;
-				timer.AutoReset = false;
-				timer.Enabled = true;
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordknight1;
+					timer.AutoReset = false;
+					timer.Enabled = true;
 
-			} else if(knightgrammarswitch == 1) {
+				} else if (knightgrammarswitch == 1) {
 					//set string for recording
 					string recordingphrase;
 					sentences.Clear ();
 					
 					//recording snipet
-					recordingphrase = "how long have you studied,do you think it is hard,can you curse";
+					recordingphrase = "to talk with my friends,I want to study in America,learning languages is fun";
 					guiswitch = 1;
 					
 					//parsing of sentences
@@ -303,103 +344,388 @@ public class MyPlugin : MonoBehaviour {
 					timer.Elapsed += recordknight2;
 					timer.AutoReset = false;
 					timer.Enabled = true;
-				}else{}
-		}
-		//Target collison with magic_archer
-		if(col.gameObject.name == "magic_archer")
-		{
-			recordinit = 2;
-			//set recording string
-			string recordingphrase1;
-			sentences.Clear ();
-			//recording snipet
-			recordingphrase1 = "my favorite is math,science is interesting,nothing is better than art";
-			guiswitch = 1;
-			
-			//parsing of sentences
-			char[] delimiterChars = {','};
-			string[] words1 = recordingphrase1.Split (delimiterChars);
-			foreach (string s in words1)
-			{
-				sentences.Add (s);
-				//indexing of sentence word count
-				int count = s.Count (c => c == ' ');
-				sentenceindex.Add (count);
+				} else if (knightgrammarswitch == 2) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "I know how to code,science is my future,I want to help the world";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordknight3;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				} else if (knightgrammarswitch == 3) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "I am the best at soccer,basketball is the most fun,i love to play golf";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordknight4;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				} else {
+
+				}
 			}
-			
-			// Play audio delay recoridng
-			timer = new System.Timers.Timer (3000);
-			timer.Elapsed += recordarcher1;
-			timer.AutoReset = false;
-			timer.Enabled = true;
-		}
+			//Target collison with magic_archer
+			if (col.gameObject.name == "magic_archer") {
+				
+				recordinit = 2;
+				
+				if (archergrammarswitch == 0) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "my favorite is math,science is interesting,nothing is better than art";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordarcher1;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+					
+				} else if (archergrammarswitch == 1) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "one,twenty five,I have no idea";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordarcher2;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				} else if (archergrammarswitch == 2) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "I love astronomy,biology is the most interesting,computers are changing the world";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordarcher3;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				} else if (archergrammarswitch == 3) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "It has to be the French,I love Italian art,Japanese art is refined";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordarcher4;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				} else {
+					
+				}
+			}
+
+			//Target collison with elf
+			if (col.gameObject.name == "elf") {
+				
+				recordinit = 2;
+				
+				if (elfgrammarswitch == 0) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase =  "I love to eat dumplings,pizza is my favorite,Nothing is better than duck";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordelf1;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+					
+				} else if(elfgrammarswitch == 1) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "I love chicken,it must have shrimp and pork,vegetable is all I need";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordelf2;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				}else if(elfgrammarswitch == 2){
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "Plain peperoni is delicious,I like mushroom and sausage,combination is alway the best";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordelf3;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				}
+				else if(elfgrammarswitch == 3){
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "I love to eat Chinese duck,eating duck fat is amazing,you must try duck liver";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordelf4;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				}else{
+					
+				}
+			}
 		
-		//Target collison with elf
-		if(col.gameObject.name == "elf")
-		{
-			recordinit = 2;
-			//set recording string
-			string recordingphrase2;
-			sentences.Clear ();
-			
-			//recording snipet
-			recordingphrase2 = "I love to eat dumplings,pizza is my favorite,Nothing is better than duck";
-			guiswitch = 1;
-			
-			//parsing of sentences
-			char[] delimiterChars = {','};
-			string[] words2 = recordingphrase2.Split (delimiterChars);
-			foreach (string s in words2)
-			{
-				sentences.Add (s);
-				//indexing of sentence word count
-				int count = s.Count (c => c == ' ');
-				sentenceindex.Add (count);
+			//Target collison with orc
+			if (col.gameObject.name == "orc") {
+				
+				recordinit = 2;
+				
+				if (orcgrammarswitch == 0) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "I want to talk to characters,We should battle enemies,I want to run and jump";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordorc1;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+					
+				} else if (orcgrammarswitch == 1) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "tell funny stories,play games with my voice,we can talk about things I like";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordorc2;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				} else if (orcgrammarswitch == 2) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "we will battle dragons,destroy waves of zombies,I want to fight other characters";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordorc3;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				} else if (orcgrammarswitch == 3) {
+					//set string for recording
+					string recordingphrase;
+					sentences.Clear ();
+					
+					//recording snipet
+					recordingphrase = "I want a three dimension,I like to beat levels,there should be a world with games";
+					guiswitch = 1;
+					
+					//parsing of sentences
+					char[] delimiterChars = {','};
+					string[] words = recordingphrase.Split (delimiterChars);
+					foreach (string s in words) {
+						sentences.Add (s);
+						//indexing of sentence word count
+						int count = s.Count (c => c == ' ');
+						sentenceindex.Add (count);
+					}
+					
+					//play audio delay recording
+					timer = new System.Timers.Timer (3000);
+					timer.Elapsed += recordorc4;
+					timer.AutoReset = false;
+					timer.Enabled = true;
+				} else {
+					
+				}
 			}
-
-			//play audio delay recording
-			timer = new System.Timers.Timer (3000);
-			timer.Elapsed += recordelf1;
-			timer.AutoReset = false;
-			timer.Enabled = true;
-			
-		}
-		
-		//Target collison with orc
-		if(col.gameObject.name == "orc")
-		{
-			recordinit = 2;
-			
-			string recordingphrase3;
-			sentences.Clear ();
-			//recording snipet
-			recordingphrase3 = "to talk with my friends,I want to study in America,learning languages is fun";
-			guiswitch = 1;
-			
-			//parsing of sentences
-			char[] delimiterChars = {','};
-			string[] words8 = recordingphrase3.Split (delimiterChars);
-			foreach (string s in words8)
-			{
-				sentences.Add (s);
-				//indexing of sentence word count
-				int count = s.Count (c => c == ' ');
-				sentenceindex.Add (count);
-			}
-
-			//play audio delay recording
-			timer = new System.Timers.Timer (3000);
-			timer.Elapsed += recordorc1;
-			timer.AutoReset = false;
-			timer.Enabled = true;
-		}
-		}else{
-
 		}
 	}
+
 	private void recordknight1(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("I am learning English,I love to develop apps,on the weekend I play golf");
+		startRecording("I am learning English,I love working with technology,playing sports is fun");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
@@ -408,16 +734,56 @@ public class MyPlugin : MonoBehaviour {
 	}
 	private void recordknight2(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("I can say my name,I learned to count to ten,I love hearing jokes");
+		startRecording("to talk with my friends,I want to study in America,learning languages is fun");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
 		timer.Enabled = true;
 	}
-	
+	private void recordknight3(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("I know how to code,science is my future,I want to help the world");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
+	private void recordknight4(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("I am the best at soccer,basketball is the most fun,i love to play golf");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
 	private void recordarcher1(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("my favorite is math,science is interesting,nothing is better thn art");
+		startRecording("my favorite is math,science is interesting,nothing is better than art");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
+
+	private void recordarcher2(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("one,twenty five,I have no idea");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
+	private void recordarcher3(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("I love astronomy,biology is the most interesting,computers are changing the world");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
+	private void recordarcher4(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("It has to be the French,I love Italian art,Japanese art is refined");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
@@ -431,10 +797,57 @@ public class MyPlugin : MonoBehaviour {
 		timer.AutoReset = false;
 		timer.Enabled = true;
 	}
-	
+	private void recordelf2(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("I love chicken,it must have shrimp and pork,vegetable is all I need");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
+	private void recordelf3(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("Plain peperoni is delicious,I like mushroom and sausage,combination is alway the best");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
+	private void recordelf4(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("I love to eat Chinese duck,eating duck fat is amazing,you must try duck liver");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
 	private void recordorc1(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("to talk with my friends,I want to study in America,learning languages is fun");
+		startRecording("I want to talk to characters,We should battle enemies,I want to run and jump");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
+	private void recordorc2(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("tell funny stories,play games with my voice,we can talk about things I like");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
+	private void recordorc3(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("we will battle dragons,destroy waves of zombies,I want to fight other characters");
+		timer = new System.Timers.Timer (3000);
+		timer.Elapsed += onRecordingDone;
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
+	private void recordorc4(object source, ElapsedEventArgs e){
+		recordinit = 1;
+		startRecording("I want a three dimension,I like to beat levels,there should be a world with games");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;

@@ -13,6 +13,8 @@ public class knightbehavior : MonoBehaviour {
 	public Animator anim;
 	public AudioClip learn;
 	public AudioClip learn1;
+	public AudioClip learn2;
+	public AudioClip learn3;
 	private AudioSource source;
 	private MyPlugin tryit;
 
@@ -40,14 +42,14 @@ public class knightbehavior : MonoBehaviour {
 						source.PlayOneShot (learn);
 						anim = GetComponent<Animator> ();
 						StartCoroutine (PlayAnimInterval (5, 1F));
-					}else if(tryit.knightgrammarswitch ==1){
+					}else if(tryit.knightgrammarswitch == 1){
 						source.PlayOneShot (learn1);
-						anim = GetComponent<Animator> ();
-						StartCoroutine (PlayAnimInterval (5, 1F));
-					}else{
-					}
-				} else {
-				
+					}else if(tryit.knightgrammarswitch == 2){
+						source.PlayOneShot (learn2);
+					}else if(tryit.knightgrammarswitch == 3){
+						source.PlayOneShot (learn3);
+					}else{}
+					
 				}
 			}
 	}

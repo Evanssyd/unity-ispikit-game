@@ -8,39 +8,52 @@ using System.Linq;
 
 
 public class archerbehavior : MonoBehaviour {
-	
+
 	//public variabless
 	public Animator anim;
-	public MyPlugin MyPlugin;
 	public AudioClip learn;
+	public AudioClip learn1;
+	public AudioClip learn2;
+	public AudioClip learn3;
 	private AudioSource source;
+	private MyPlugin tryit;
+	
+	public GameObject GameObject;
+
 	
 	// Use this for initialization
-	void Start () {
+void Start () {
 		source = GetComponent<AudioSource>();
-		
+		tryit = GameObject.GetComponent<MyPlugin>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
-	
-	
-	
+
 	void OnCollisionEnter (Collision col)
 	{
+		
 		if (col.gameObject.name == "GameObject") {
-			source.PlayOneShot(learn);
-			anim = GetComponent<Animator>();
-			StartCoroutine(PlayAnimInterval(5, 1F));
-			
-			
+			if (tryit.recordinit == 0) {
+				if(tryit.archergrammarswitch == 0){
+					source.PlayOneShot (learn);
+					anim = GetComponent<Animator> ();
+					StartCoroutine (PlayAnimInterval (5, 1F));
+				}else if(tryit.archergrammarswitch == 1){
+					source.PlayOneShot (learn1);
+				}else if(tryit.archergrammarswitch == 2){
+					source.PlayOneShot (learn2);
+				}else if(tryit.archergrammarswitch == 3){
+					source.PlayOneShot (learn3);
+				}else{}
+				
+			}
 		}
 	}
-	
-	
-	private IEnumerator    PlayAnimInterval(int n, float time)
+
+	private IEnumerator PlayAnimInterval(int n, float time)
 	{
 		while (n > 0)
 		{
@@ -49,6 +62,5 @@ public class archerbehavior : MonoBehaviour {
 			yield return new WaitForSeconds(time);
 		}
 	}
-	
 }
 

@@ -11,13 +11,20 @@ public class orcbehavior : MonoBehaviour {
 
 	//public variabless
 	public Animator anim;
-	public MyPlugin MyPlugin;
 	public AudioClip learn;
+	public AudioClip learn1;
+	public AudioClip learn2;
+	public AudioClip learn3;
 	private AudioSource source;
+	private MyPlugin tryit;
+	
+	public GameObject GameObject;
+
 
 	// Use this for initialization
 	void Start () {
 		source = GetComponent<AudioSource>();
+		tryit = GameObject.GetComponent<MyPlugin>();
 		
 	}
 	
@@ -31,11 +38,20 @@ public class orcbehavior : MonoBehaviour {
 	void OnCollisionEnter (Collision col)
 	{
 		if (col.gameObject.name == "GameObject") {
-			source.PlayOneShot(learn);
-			anim = GetComponent<Animator>();
-			StartCoroutine(PlayAnimInterval(5, 1F));
-
-
+			if (tryit.recordinit == 0) {
+				if(tryit.orcgrammarswitch == 0){
+					source.PlayOneShot (learn);
+					anim = GetComponent<Animator> ();
+					StartCoroutine (PlayAnimInterval (5, 1F));
+				}else if(tryit.orcgrammarswitch == 1){
+					source.PlayOneShot (learn1);
+				}else if(tryit.orcgrammarswitch == 2){
+					source.PlayOneShot (learn2);
+				}else if(tryit.orcgrammarswitch == 3){
+					source.PlayOneShot (learn3);
+				}else{}
+				
+			}
 		}
 	}
 
