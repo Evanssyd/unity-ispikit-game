@@ -90,6 +90,14 @@ public class MyPlugin : MonoBehaviour {
 		Debug.Log (status);
 		initComplete = status;
 		//Setting callbacks
+		var controller1 = GameObject.Find("CF-Platformer-3-buttons");
+		if (initComplete == "0") {
+			controller1.SetActive(true);
+
+		} else {
+			controller1.SetActive(false);
+
+		}
 		setPlaybackDoneCallback ("GameObject", "playbackDoneCallback");
 		setResultCallback ("GameObject", "resultCallback");
 		setCompletionCallback ("GameObject", "completionCallback");
@@ -565,7 +573,7 @@ public class MyPlugin : MonoBehaviour {
 					sentences.Clear ();
 					
 					//recording snipet
-					recordingphrase = "Plain peperoni is delicious,I like mushroom and sausage,combination is alway the best";
+					recordingphrase = "Plain pepperoni is delicious,I like mushroom and sausage,combination is alway the best";
 					guiswitch = 1;
 					
 					//parsing of sentences
@@ -698,7 +706,7 @@ public class MyPlugin : MonoBehaviour {
 					sentences.Clear ();
 					
 					//recording snipet
-					recordingphrase = "I want a three dimension,I like to beat levels,there should be a world with games";
+					recordingphrase = "I want a three dimension,I like to beat levels,it should have mini games";
 					guiswitch = 1;
 					
 					//parsing of sentences
@@ -807,7 +815,7 @@ public class MyPlugin : MonoBehaviour {
 	}
 	private void recordelf3(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("Plain peperoni is delicious,I like mushroom and sausage,combination is alway the best");
+		startRecording("Plain pepperoni is delicious,I like mushroom and sausage,combination is alway the best");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
@@ -847,7 +855,7 @@ public class MyPlugin : MonoBehaviour {
 	}
 	private void recordorc4(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("I want a three dimension,I like to beat levels,there should be a world with games");
+		startRecording("I want a three dimension,I like to beat levels,it should have mini games");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
