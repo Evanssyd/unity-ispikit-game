@@ -76,13 +76,22 @@ public class MyPlugin : MonoBehaviour {
 	public int guiswitch = 0;
 	public int recordinit = 0;
 
-	void Start () {
+	//volume
+	public float volumefloat;
+	public float barDisplay; //current progress
+	public Vector2 pos = new Vector2(5,215);
+	public Vector2 size = new Vector2(120,40);
+	public Texture2D emptyTex;
+	public Texture2D fullTex;
+	public GUISkin guivolume;
 
+	void Start () {
 	
+
 	}
 	
 	void Update () {
-		
+		barDisplay = volumefloat;
 	}
 	
 	public void initCallback(string status) {
@@ -289,8 +298,9 @@ public class MyPlugin : MonoBehaviour {
 			audiolist.Add (s);
 			//global volumne variable
 			volumne = Int32.Parse(audiolist[0]);
-			
+			volumefloat = volumne/100f; 
 		}
+
 		
 	}
 	
@@ -862,13 +872,15 @@ public class MyPlugin : MonoBehaviour {
 		timer.Enabled = true;
 	}
 
-	//lets set the possble recording answers on collsiom then the results of complete
+
 	void OnGUI()
 	{
-		//introduction box
+	//introduction box
 		if (initComplete == "0") {	
-		
+			
 		} else {
+			
+	//guibox size
 			if (Screen.width < 800 && Screen.width > 490) {
 				GUI.skin.label.fontSize = 30;
 				GUI.skin.box.fontSize = 45;
@@ -879,22 +891,22 @@ public class MyPlugin : MonoBehaviour {
 				GUI.skin.label.fontSize = 18;
 				GUI.skin.box.fontSize = 25;
 			}
-			
-				GUI.Box (new Rect (5, 10, Screen.width - 10, 640), "");
+	// introduction box
+			GUI.Box (new Rect (5, 10, Screen.width - 10, 640), "");
+	//font size of the titles
 			if(Screen.width > 500){
 				GUI.Label (new Rect ((Screen.width / 4), 15, Screen.width - 10,600),"Ispikit English SDK" );
 			}else{
 				GUI.Label (new Rect ((Screen.width / 5), 15, Screen.width - 10,600),"Ispikit English SDK" );
 			}
-				GUI.Label (new Rect (10, 100, Screen.width - 15, 600), "Recognize what a student says than give them feedback  how well they said it. Our SDK is easy to setup and runs completely offline.");
-				GUI.Label (new Rect (10, 300, Screen.width - 10, 600), "For this demo, collide with a character and speak one of the optional phrases.");
-				GUI.Label (new Rect (10, 425, Screen.width - 10, 600), "The system is initializing, once this box disappears you are ready to begin!");
+			GUI.Label (new Rect (10, 100, Screen.width - 15, 600), "Recognize what a student says than give them feedback  how well they said it. Our SDK is easy to setup and runs completely offline.");
+			GUI.Label (new Rect (10, 300, Screen.width - 10, 600), "For this demo, collide with a character and speak one of the optional phrases.");
+			GUI.Label (new Rect (10, 425, Screen.width - 10, 600), "The system is initializing, once this box disappears you are ready to begin!");
 		}
 		
-		
-		
-		//options box
+	//potential answers guibox options box
 		if (guiswitch == 1) {
+	//guifont options
 			if (Screen.width > 700){
 				GUI.skin.label.fontSize = 40;
 				GUI.skin.box.fontSize = 40;
@@ -906,23 +918,21 @@ public class MyPlugin : MonoBehaviour {
 			GUI.Label (new Rect (5, 50, (Screen.width / 2) - 10, 330), sentences [0]);
 			GUI.Label (new Rect (5, 90,  (Screen.width / 2) - 10, 330), sentences [1]);
 			GUI.Label (new Rect (5, 130,  (Screen.width / 2) - 10, 330), sentences [2]);
-				
+			
+	//when to speak label
 			if(recordinit == 0){
 				GUI.Label (new Rect (5, 170,  (Screen.width / 2) - 10, 330),"Not Recording");
-				GUI.Label (new Rect (5, 210, (Screen.width / 2) - 10, 330),"Volume: " + volumne.ToString ());
 			}else if(recordinit == 2){
 				GUI.Label (new Rect (5, 170,  (Screen.width / 2) - 10, 330),"Wait");
-				GUI.Label (new Rect (5, 210, (Screen.width / 2) - 10, 330),"Volume: " + volumne.ToString ());
 			}else{
 				GUI.Label (new Rect (5, 170,  (Screen.width / 2) - 10, 330),"Speak Now! ");
-				GUI.Label (new Rect (5, 210, (Screen.width / 2) - 10, 330),"Volume: " + volumne.ToString ());
 			}
 		} else {
 		}
 		
-		//THE RESULTS BOX
+	//THE RESULTS BOX
 		if(complete > 1 && complete < 99){
-
+	//Guifont size
 			if(Screen.width > 700){
 				GUI.skin.label.fontSize = 40;
 				GUI.skin.box.fontSize = 40;
@@ -930,10 +940,12 @@ public class MyPlugin : MonoBehaviour {
 				GUI.skin.label.fontSize = 20;
 				GUI.skin.box.fontSize = 20;
 			}
+	//System calculation box      
 			GUI.Box (new Rect ((Screen.width / 2) + 5, 10, (Screen.width / 2) + 5, 250), "");
 			GUI.Label (new Rect ((Screen.width / 2) + 10, 100, (Screen.width / 2) + 10, 330), "Calculating your score...");
 		}
 		else if (complete == 100) {
+	//Guifont size
 			if(Screen.width > 700){
 				GUI.skin.label.fontSize = 40;
 				GUI.skin.box.fontSize = 40;
@@ -941,25 +953,45 @@ public class MyPlugin : MonoBehaviour {
 				GUI.skin.label.fontSize = 20;
 				GUI.skin.box.fontSize = 20;
 			}
-				GUI.Box (new Rect ((Screen.width / 2) + 5, 10, (Screen.width / 2) - 5, 250), "Your results");
-				GUI.Label (new Rect ((Screen.width / 2) + 10, 50, (Screen.width / 2) - 10, 330), sentences [recognizedSentenceindex]);
-
+			
+	//label and sentence recognized    
+			GUI.Box (new Rect ((Screen.width / 2) + 5, 10, (Screen.width / 2) - 5, 250), "Your results");
+			GUI.Label (new Rect ((Screen.width / 2) + 10, 50, (Screen.width / 2) - 10, 330), sentences [recognizedSentenceindex]);
+			
+	//missed word feedback
 			if(notrecognizedwordslist.Count > 0){
 				GUI.Label (new Rect ((Screen.width / 2) + 10, 90, (Screen.width / 2) - 10, 330), "Missed: " + sentences1[notrecognizedwordslist[0]]);
 			}else{
 				GUI.Label (new Rect ((Screen.width / 2) + 10, 90, (Screen.width / 2) - 10, 330), "Missed: None");
 			}
-
+	//mispronounced word feedback
 			if(mispronouncedwordsindex.Count > 0){
 				GUI.Label (new Rect ((Screen.width / 2) + 10, 130, (Screen.width / 2) - 10, 330), "Mispronounced: " + sentences1[mispronouncedwordsindex[0]]);
 			}else{
 				GUI.Label (new Rect ((Screen.width / 2) + 10, 130, (Screen.width / 2) - 10, 330), "Mispronounced: None");
 			}
-
-				GUI.Label (new Rect ((Screen.width / 2) + 10, 170, (Screen.width / 2) - 10, 330), "Score: " + score.ToString ());
-				GUI.Label (new Rect ((Screen.width / 2) + 10, 210, (Screen.width / 2) - 10, 330), "Speed: " + speed.ToString ());
+			
+	//score feedback
+			GUI.Label (new Rect ((Screen.width / 2) + 10, 170, (Screen.width / 2) - 10, 330), "Score: " + score.ToString ());
+			GUI.Label (new Rect ((Screen.width / 2) + 10, 210, (Screen.width / 2) - 10, 330), "Speed: " + speed.ToString ());
+		} else {}
+	//volume
+		if (recordinit == 1) {
+			//draw the background:
+			GUI.BeginGroup(new Rect(pos.x, pos.y, size.x, size.y));
+			GUI.Box(new Rect(0,0, size.x, size.y), emptyTex);
+	//draw the filled-in part with guivol backgroun
+			if(barDisplay > .01){
+				GUI.skin = guivolume;
+				GUI.BeginGroup(new Rect(0,0, size.x * barDisplay, size.y));
+				GUI.Box(new Rect(0,0, size.x, size.y), fullTex);
+				GUI.EndGroup();
+			}else{	
+			}
+			GUI.EndGroup();
 		} else {
 		}
+
 	}
 }
 
