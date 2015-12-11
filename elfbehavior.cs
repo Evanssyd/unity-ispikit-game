@@ -16,7 +16,7 @@ public class elfbehavior : MonoBehaviour {
 	public AudioClip learn2;
 	public AudioClip learn3;
 	private AudioSource source;
-	private MyPlugin tryit;
+	private Ispikit tryit;
 	
 	public GameObject GameObject;
 	
@@ -24,7 +24,7 @@ public class elfbehavior : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		source = GetComponent<AudioSource>();
-		tryit = GameObject.GetComponent<MyPlugin>();
+		tryit = GameObject.GetComponent<Ispikit>();
 		
 	}
 	
@@ -37,22 +37,24 @@ public class elfbehavior : MonoBehaviour {
 	
 	void OnCollisionEnter (Collision col)
 	{
-		if (tryit.recordinit == 0) {
-			if(tryit.elfgrammarswitch == 0){
-				source.PlayOneShot (learn);
-				anim = GetComponent<Animator> ();
-				StartCoroutine (PlayAnimInterval (5, 1F));
-			}else if(tryit.elfgrammarswitch == 1){
-				source.PlayOneShot (learn1);
-			}else if(tryit.elfgrammarswitch == 2){
-				source.PlayOneShot (learn2);
-			}else if(tryit.elfgrammarswitch == 3){
-				source.PlayOneShot (learn3);
-			}else{}
+		if (col.gameObject.name == "GameObject") {
+			if (tryit.recordinit == 0) {
+				if (tryit.elfgrammarswitch == 0) {
+					source.PlayOneShot (learn);
+					anim = GetComponent<Animator> ();
+					StartCoroutine (PlayAnimInterval (5, 1F));
+				} else if (tryit.elfgrammarswitch == 1) {
+					source.PlayOneShot (learn1);
+				} else if (tryit.elfgrammarswitch == 2) {
+					source.PlayOneShot (learn2);
+				} else if (tryit.elfgrammarswitch == 3) {
+					source.PlayOneShot (learn3);
+				} else {
+				}
 			
+			}
 		}
 	}
-	
 	
 	private IEnumerator    PlayAnimInterval(int n, float time)
 	{

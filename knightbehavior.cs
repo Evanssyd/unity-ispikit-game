@@ -16,14 +16,14 @@ public class knightbehavior : MonoBehaviour {
 	public AudioClip learn2;
 	public AudioClip learn3;
 	private AudioSource source;
-	private MyPlugin tryit;
+	private Ispikit tryit;
 
 	public GameObject GameObject;
 	
 	// Use this for initialization
 	void Start () {
 		source = GetComponent<AudioSource>();
-		tryit = GameObject.GetComponent<MyPlugin>();
+		tryit = GameObject.GetComponent<Ispikit>();
 		
 	}
 	

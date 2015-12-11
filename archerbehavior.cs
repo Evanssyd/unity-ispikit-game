@@ -16,16 +16,19 @@ public class archerbehavior : MonoBehaviour {
 	public AudioClip learn2;
 	public AudioClip learn3;
 	private AudioSource source;
-	private MyPlugin tryit;
+	private Ispikit tryit;
 	
 	public GameObject GameObject;
 
 	
 	// Use this for initialization
 void Start () {
-		source = GetComponent<AudioSource>();
-		tryit = GameObject.GetComponent<MyPlugin>();
+		source = GetComponent<AudioSource> ();
+		tryit = GameObject.GetComponent<Ispikit> ();
+		AudioSource aud = GetComponent<AudioSource>();
+		aud.clip = Microphone.Start("Built-in Microphone", true, 1, 1);
 	}
+		
 	
 	// Update is called once per frame
 	void Update () {
