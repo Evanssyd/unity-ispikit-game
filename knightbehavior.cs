@@ -16,14 +16,14 @@ public class knightbehavior : MonoBehaviour {
 	public AudioClip learn2;
 	public AudioClip learn3;
 	private AudioSource source;
-	private Ispikit tryit;
+	private Ispikit ispikit;
 
 	public GameObject GameObject;
 	
 	// Use this for initialization
 	void Start () {
 		source = GetComponent<AudioSource>();
-		tryit = GameObject.GetComponent<Ispikit>();
+		ispikit = GameObject.GetComponent<Ispikit>();
 		
 	}
 	
@@ -37,16 +37,16 @@ public class knightbehavior : MonoBehaviour {
 	{ 
 
 			if (col.gameObject.name == "GameObject") {
-				if (tryit.recordinit == 0) {
-					if(tryit.knightgrammarswitch == 0){
+				if (ispikit.recordinit == 0) {
+					if(ispikit.knightgrammarswitch == 0){
 						source.PlayOneShot (learn);
 						anim = GetComponent<Animator> ();
 						StartCoroutine (PlayAnimInterval (5, 1F));
-					}else if(tryit.knightgrammarswitch == 1){
+					}else if(ispikit.knightgrammarswitch == 1){
 						source.PlayOneShot (learn1);
-					}else if(tryit.knightgrammarswitch == 2){
-						source.PlayOneShot (learn2);
-					}else if(tryit.knightgrammarswitch == 3){
+					}else if(ispikit.knightgrammarswitch == 2){
+							source.PlayOneShot (learn2);
+					}else if(ispikit.knightgrammarswitch == 3){
 						source.PlayOneShot (learn3);
 					}else{}
 					
