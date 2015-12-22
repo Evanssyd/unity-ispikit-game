@@ -123,6 +123,8 @@ public class Ispikit : MonoBehaviour {
 	public Texture2D fullTex;
 	public GUISkin guivolume;
 
+	public GUIStyle style;
+
 	private static Ispikit ispikit;
 
 	void Awake()
@@ -141,6 +143,10 @@ public class Ispikit : MonoBehaviour {
 
 	void Start () {
 		ispikit = GetComponent<Ispikit>();
+		 style.normal.textColor = Color.red;
+
+		AudioSource audPermissions = GetComponent<AudioSource>();
+		audPermissions.clip = Microphone.Start("Built-in Microphone", true, 1, 1);
 	}
 	void Update () {
 
@@ -654,7 +660,7 @@ public class Ispikit : MonoBehaviour {
 					sentences.Clear ();
 
 					//recording snipet
-					recordingphrase = "It has to be the French,I love Italian art,Japanese art is refined";
+					recordingphrase = "It has to be the French,I love Italian art,Chinese art is refined";
 					guiswitch = 1;
 
 					//parsing of sentences
@@ -956,7 +962,7 @@ public class Ispikit : MonoBehaviour {
 	}
 	private void recordarcher4(object source, ElapsedEventArgs e){
 		recordinit = 1;
-		startRecording("It has to be the French,I love Italian art,Japanese art is refined");
+		startRecording("It has to be the French,I love Italian art,Chinese art is refined");
 		timer = new System.Timers.Timer (3000);
 		timer.Elapsed += onRecordingDone;
 		timer.AutoReset = false;
@@ -1079,7 +1085,8 @@ public class Ispikit : MonoBehaviour {
 			if(recordinit == 0){
 				GUI.Label (new Rect (5, 170,  (Screen.width / 2) - 10, 330),"Not Recording");
 			}else if(recordinit == 2){
-				GUI.Label (new Rect (5, 170,  (Screen.width / 2) - 10, 330),"Wait");
+
+				GUI.Label (new Rect (5, 170,  (Screen.width / 2) - 10, 330),"Wait",style);
 			}else{
 				GUI.Label (new Rect (5, 170,  (Screen.width / 2) - 10, 330),"Speak Now! ");
 			}
