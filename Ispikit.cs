@@ -7,13 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 
 // This is boilerplate code to start coding using the Ispikit Unity plugin
-// It assumes it belongs to a "GameObject" game object
+// On iOS, it assumes it belongs to a "GameObject" game object
 
 [RequireComponent (typeof (AudioSource))]
 
 public class Ispikit : MonoBehaviour {
 
-// Below are the available plugin calls
+// Below are the available plugin calls for all supported platforms
+
 #if UNITY_IOS
 	[DllImport("__Internal")]
 	private static extern int startInitialization(string callbackGameObjectName, string callbackMethodName);
@@ -71,61 +72,93 @@ public class Ispikit : MonoBehaviour {
 	private static extern int stopPlayback();
 	[DllImport("upal")]
 	private static extern int addWord(string word, string pronunciation);
+#elif UNITY_STANDALONE_OSX
+	public delegate void initCallbackDelegate(int n);
+	public delegate void resultCallbackDelegate(int score, int speed, string words);
+	public delegate void completionCallbackDelegate(int completion);
+	public delegate void newWordsCallbackDelegate(string words);
+	public delegate void newAudioCallbackDelegate(int volume, string pitch, string waveform);
+	public delegate void playbackDoneCallbackDelegate();
 
+	[DllImport("ispikit")]
+	private static extern int startInitialization(initCallbackDelegate icb, string path);
+	[DllImport("ispikit")]
+	private static extern int setPlaybackDoneCallback(playbackDoneCallbackDelegate pcb);
+	[DllImport("ispikit")]
+	private static extern int setResultCallback(resultCallbackDelegate rcb);
+	[DllImport("ispikit")]
+	private static extern int setCompletionCallback(completionCallbackDelegate ccb);
+	[DllImport("ispikit")]
+	private static extern int setNewWordsCallback(newWordsCallbackDelegate nwcb);
+	[DllImport("ispikit")]
+	private static extern int setNewAudioCallback(newAudioCallbackDelegate nacb);
+	[DllImport("ispikit")]
+	private static extern int startRecording(string sentences);
+	[DllImport("ispikit")]
+	private static extern int stopRecording();
+	[DllImport("ispikit")]
+	private static extern int setStrictness(int strictness);
+	[DllImport("ispikit")]
+	private static extern int startPlayback();
+	[DllImport("ispikit")]
+	private static extern int stopPlayback();
+	[DllImport("ispikit")]
+	private static extern int addWord(string word, string pronunciation);
 #endif
-	private static System.Timers.Timer timer;
 
-	private static int scoring;
-	public static int score1;
+private static System.Timers.Timer timer;
 
-	private static int speedprivate;
-	public static int speed1;
+private static int scoring;
+public static int score1;
 
-	private static string wordsprivate;
-	public static string words1;
+private static int speedprivate;
+public static int speed1;
 
-	private static string strintoParse;
+private static string wordsprivate;
+public static string words1;
 
-	private static int complete;
-	public int volumne;
+private static string strintoParse;
 
-	//private variables
-	private static int countofVariables;
-	private static int wordnumberpostion;
-	private static int numberofWords;
-	public static int recognizedSentenceindex;
-	public static string initComplete;
+private static int complete;
+public int volumne;
+
+//private variables
+private static int countofVariables;
+private static int wordnumberpostion;
+private static int numberofWords;
+public static int recognizedSentenceindex;
+public static string initComplete;
 
 
-	public int guiswitch = 0;
-	public int recordinit = 0;
+public int guiswitch = 0;
+public int recordinit = 0;
 
-	//public lists
-	public static List<int> mispronouncedwordsindex  = new List<int> ();
-	public static List<int> notrecognizedwordslist  = new List<int> ();
-	public static List<String> sentences = new List<String> ();
-	public static List<String> sentences1 = new List<String> ();
-	//private list
-	private List<int> sentenceindex = new List<int> ();
+//public lists
+public static List<int> mispronouncedwordsindex  = new List<int> ();
+public static List<int> notrecognizedwordslist  = new List<int> ();
+public static List<String> sentences = new List<String> ();
+public static List<String> sentences1 = new List<String> ();
+//private list
+private List<int> sentenceindex = new List<int> ();
 
-	//grammar switching
-	public int knightgrammarswitch = 0;
-	public int archergrammarswitch = 0;
-	public int orcgrammarswitch = 0;
-	public int elfgrammarswitch = 0;
+//grammar switching
+public int knightgrammarswitch = 0;
+public int archergrammarswitch = 0;
+public int orcgrammarswitch = 0;
+public int elfgrammarswitch = 0;
 
-	//volume
-	private static float volumefloat;
-	public static float barDisplay; //current progress
-	public Vector2 pos = new Vector2(210,215);
-	public Vector2 size = new Vector2(120,40);
-	public Texture2D emptyTex;
-	public Texture2D fullTex;
-	public GUISkin guivolume;
+//volume
+private static float volumefloat;
+public static float barDisplay; //current progress
+public Vector2 pos = new Vector2(210,215);
+public Vector2 size = new Vector2(120,40);
+public Texture2D emptyTex;
+public Texture2D fullTex;
+public GUISkin guivolume;
 
-	public GUIStyle style;
+public GUIStyle style;
 
-	private static Ispikit ispikit;
+private static Ispikit ispikit;
 
 	void Awake()
 	{
@@ -136,14 +169,18 @@ public class Ispikit : MonoBehaviour {
 		// When calling the startInitialization function, we provide the name
 		// of the Game Object and Callback for when init is done
 		Debug.Log (startInitialization(gameObjectName, callbackName));
-#elif UNITY_ANDROID
+#elif UNITY_ANDROID || UNITY_STANDALONE_OSX
 		Debug.Log (startInitialization(new initCallbackDelegate( this.initCallback ), Application.persistentDataPath));
 #endif
 	}
 
 	void Start () {
+#if UNITY_IOS || UNITY_STANDALONE_OSX
 		ispikit = GetComponent<Ispikit>();
 		 style.normal.textColor = Color.red;
+		 style.fontSize = 30;
+#elif UNITY_ANDROID
+#endif
 
 		AudioSource audPermissions = GetComponent<AudioSource>();
 		audPermissions.clip = Microphone.Start("Built-in Microphone", true, 1, 1);
@@ -153,9 +190,10 @@ public class Ispikit : MonoBehaviour {
 		barDisplay = volumefloat;
 	}
 
+
 #if UNITY_IOS
 	public void initCallback(string status) {
-#elif UNITY_ANDROID
+#elif UNITY_ANDROID || UNITY_STANDALONE_OSX
 	public void initCallback(int status) {
 #endif
 		// This is for when plugin is initialized, status should be "0"
@@ -170,7 +208,7 @@ public class Ispikit : MonoBehaviour {
 		setCompletionCallback ("GameObject", "completionCallback");
 		setNewWordsCallback ("GameObject", "newWordsCallback");
 		setNewAudioCallback ("GameObject", "newAudioCallback");
-#elif UNITY_ANDROID
+#elif UNITY_ANDROID || UNITY_STANDALONE_OSX
 		initComplete = status.ToString();
 		setPlaybackDoneCallback (new playbackDoneCallbackDelegate( this.playbackDoneCallback ));
 		setResultCallback (new resultCallbackDelegate( this.resultCallback ));
@@ -181,19 +219,29 @@ public class Ispikit : MonoBehaviour {
 
 	}
 
-	public void onRecordingDone(object source, ElapsedEventArgs e) {
+	public static void playbackDoneCallback() {
+		// This is called once playback is done. It will start another timer
+		// after which recording will start again.
+		Debug.Log ("Playback Done");
+		timer = new System.Timers.Timer (1000);
+		timer.AutoReset = false;
+		timer.Enabled = true;
+	}
+
+	private static void onRecordingDone(object source, ElapsedEventArgs e) {
 		// This just stops recording. In the background, analysis will start
 		// and result callback will be called once done.
 		Debug.Log ("Stopping recording");
 		stopRecording ();
 
 		//switching ui for recording
-		recordinit = 0;
+		ispikit.recordinit = 0;
+
 	}
 #if UNITY_IOS
 	public void resultCallback(string status) {
-#elif UNITY_ANDROID
-	public void resultCallback(int score, int speed, string words) {
+#elif UNITY_ANDROID || UNITY_STANDALONE_OSX
+	public static void resultCallback(int score, int speed, string words) {
 #endif
 		// Callback when result is available, a few seconds after stopRecording, typically.
 		// See docs on how to parse the result.
@@ -201,17 +249,16 @@ public class Ispikit : MonoBehaviour {
 #if UNITY_IOS
 		Debug.Log (status);
 		strintoParse = status;
-#elif UNITY_ANDROID
+#elif UNITY_ANDROID || UNITY_STANDALONE_OSX
 		Debug.Log (score);
 		Debug.Log (speed);
 		Debug.Log (words);
 		scoring = score;
 		speedprivate = speed;
 		wordsprivate = words;
-
 #endif
 		// Starts replaying the userś voice after one second
-		timer = new System.Timers.Timer (50);
+		timer = new System.Timers.Timer (1000);
 		timer.Elapsed += parse;
 		timer.AutoReset = false;
 		timer.Enabled = true;
@@ -223,18 +270,11 @@ public class Ispikit : MonoBehaviour {
 		Debug.Log ("Starting playback");
 		startPlayback();
 	}
-	public void playbackDoneCallback() {
-		// This is called once playback is done. It will start another timer
-		// after which recording will start again.
-		Debug.Log ("Playback Done");
-		timer = new System.Timers.Timer (1000);
-		timer.AutoReset = false;
-		timer.Enabled = true;
-	}
+
 #if UNITY_IOS
 	public void completionCallback(string status) {
-#elif UNITY_ANDROID
-	public void completionCallback(int completion) {
+#elif UNITY_ANDROID || UNITY_STANDALONE_OSX
+	public static void completionCallback(int completion) {
 #endif
 		// This callback is called during analysis
 		// Status is between "0" and "100", it is the percentage of completion of
@@ -243,12 +283,12 @@ public class Ispikit : MonoBehaviour {
 #if UNITY_IOS
 		Debug.Log (status);
 		complete = Int32.Parse (status);
-#elif UNITY_ANDROID
+#elif UNITY_ANDROID || UNITY_STANDALONE_OSX
 		Debug.Log (completion);
 		complete = completion;
 #endif
 	}
-	public void newWordsCallback(string words) {
+	public static void newWordsCallback(string words) {
 		// This callback comes during recording, it gives the words recognized
 		// see docs on how to parse the string
 		Debug.Log ("New words");
@@ -256,13 +296,13 @@ public class Ispikit : MonoBehaviour {
 	}
 #if UNITY_IOS
 	public void newAudioCallback(string status) {
-#elif UNITY_ANDROID
-	public void newAudioCallback(int volume, string pitch, string waveform) {
+#elif UNITY_ANDROID || UNITY_STANDALONE_OSX
+	public static void newAudioCallback(int volume, string pitch, string waveform) {
 #endif
 		// This callback also comes during recording, it gives data about the recording
 		// that can be used for UI effects: audio volume, pitch and waveform
 		// see docs on how to parse it
-		Debug.Log ("New audio volume");
+		Debug.Log ("New audio data");
 #if UNITY_IOS
 		Debug.Log (status);
 		char[] delimiterChars = {','};
@@ -275,14 +315,14 @@ public class Ispikit : MonoBehaviour {
 			volumne = Int32.Parse(audiolist[0]);
 			volumefloat = volumne/100f;
 		}
-#elif UNITY_ANDROID
+#elif UNITY_ANDROID || UNITY_STANDALONE_OSX
 		Debug.Log (volume);
 		Debug.Log (pitch);
 		Debug.Log (waveform);
 		volumefloat = volume/100f;
 #endif
 	}
-	private static void parse(object source, ElapsedEventArgs e) {
+private static void parse(object source, ElapsedEventArgs e) {
 #if UNITY_IOS
 
 		///parsing results string into a list
@@ -354,7 +394,7 @@ public class Ispikit : MonoBehaviour {
 		//Set the speed public variable
 		speed1 = Int32.Parse(list[1]);
 
-#elif UNITY_ANDROID
+#elif UNITY_ANDROID || UNITY_STANDALONE_OSX
 		score1 = scoring;
 		speed1 = speedprivate;
 		words1 = wordsprivate;
@@ -1046,8 +1086,8 @@ public class Ispikit : MonoBehaviour {
 				GUI.skin.label.fontSize = 30;
 				GUI.skin.box.fontSize = 45;
 			} else if (Screen.width > 800) {
-				GUI.skin.label.fontSize = 50;
-				GUI.skin.box.fontSize = 60;
+				GUI.skin.label.fontSize = 30;
+				GUI.skin.box.fontSize = 40;
 			}else {
 				GUI.skin.label.fontSize = 18;
 				GUI.skin.box.fontSize = 25;
@@ -1069,8 +1109,8 @@ public class Ispikit : MonoBehaviour {
 		if (guiswitch == 1) {
 			//guifont options
 			if (Screen.width > 700){
-				GUI.skin.label.fontSize = 40;
-				GUI.skin.box.fontSize = 40;
+				GUI.skin.label.fontSize = 30;
+				GUI.skin.box.fontSize = 30;
 			}else{
 				GUI.skin.label.fontSize = 15;
 				GUI.skin.box.fontSize = 15;
@@ -1097,8 +1137,8 @@ public class Ispikit : MonoBehaviour {
 		if(complete > 1 && complete < 99){
 			//Guifont size
 			if(Screen.width > 700){
-				GUI.skin.label.fontSize = 40;
-				GUI.skin.box.fontSize = 40;
+				GUI.skin.label.fontSize = 30;
+				GUI.skin.box.fontSize = 30;
 			}else{
 				GUI.skin.label.fontSize = 15;
 				GUI.skin.box.fontSize = 15;
@@ -1110,8 +1150,8 @@ public class Ispikit : MonoBehaviour {
 		else if (complete == 100) {
 			//Guifont size
 			if(Screen.width > 700){
-				GUI.skin.label.fontSize = 40;
-				GUI.skin.box.fontSize = 40;
+				GUI.skin.label.fontSize = 30;
+				GUI.skin.box.fontSize = 30;
 			}else{
 				GUI.skin.label.fontSize = 15;
 				GUI.skin.box.fontSize = 15;
