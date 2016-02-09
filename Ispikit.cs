@@ -186,7 +186,7 @@ private static Ispikit ispikit;
 		audPermissions.clip = Microphone.Start("Built-in Microphone", true, 1, 1);
 	}
 	void Update () {
-
+		//display volume on update
 		barDisplay = volumefloat;
 	}
 
